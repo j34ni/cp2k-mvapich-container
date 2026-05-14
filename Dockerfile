@@ -12,7 +12,7 @@ RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/conda-forg
     rm /var/tmp/Miniforge3-Linux-x86_64.sh
 
 RUN . /opt/conda/etc/profile.d/conda.sh && \
-    mamba install -y python=3.11 gcc_linux-64 gxx_linux-64 gfortran_linux-64 make mvapich=4.1 cmake && \
+    mamba install -y python=3.11 cmake gcc_linux-64 gxx_linux-64 gfortran_linux-64 libzip make mvapich=4.1 pkg-config zlib && \
     conda clean -afy
 
 RUN ln -s /opt/conda/lib /opt/conda/lib64 && \
