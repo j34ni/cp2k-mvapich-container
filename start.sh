@@ -1,6 +1,5 @@
 #!/bin/bash
-
-. /opt/conda/etc/profile.d/conda.sh && conda activate base
+source /opt/conda/etc/profile.d/conda.sh
 
 if [ -f /opt/cp2k_toolchain/install/setup ]; then
     source /opt/cp2k_toolchain/install/setup

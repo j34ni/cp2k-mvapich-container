@@ -30,18 +30,22 @@ RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/cp2k/cp2k/
 
 RUN source /opt/conda/etc/profile.d/conda.sh && \
     cd /opt/cp2k_toolchain && \
-    CC=mpicc CXX=mpicxx FC=mpifort \
+    CC=mpicc \
+    CXX=mpicxx \
+    FC=mpifort \
+    ZLIB_ROOT=/opt/conda \
+    CMAKE_PREFIX_PATH=/opt/conda \
     ./install_cp2k_toolchain.sh \
          --mpi-mode=mpich \
-         --with-cosma=install \
-         --with-elpa=install \
-         --with-fftw=install \
          --with-gcc=/opt/conda \
-         --with-libint=install \
-         --with-libxc=install \
          --with-mpich=/opt/conda \
          --with-openblas=install \
          --with-scalapack=install \
+         --with-fftw=install \
+         --with-libint=install \
+         --with-libxc=install \
+         --with-cosma=install \
+         --with-elpa=install \
          -j $(nproc)
 
 RUN source /opt/conda/etc/profile.d/conda.sh && \
@@ -53,15 +57,15 @@ RUN source /opt/conda/etc/profile.d/conda.sh && \
           -DCMAKE_Fortran_COMPILER=mpifort \
           -DCMAKE_PREFIX_PATH='/opt/cp2k_toolchain/install;/opt/conda' \
           -DMPI_HOME=/opt/conda \
-          -DCP2K_USE_COSMA=ON \
-          -DCP2K_USE_DLAF=OFF \
-          -DCP2K_USE_ELPA=ON \
-          -DCP2K_USE_FFTW3=ON \
+          -DCP2K_USE_MPI=ON \
           -DCP2K_USE_LIBINT=ON \
           -DCP2K_USE_LIBXC=ON \
-          -DCP2K_USE_MPI=ON \
-          -DCP2K_USE_PEXSI=OFF \
-          -DCP2K_USE_SCALAPACK=ON && \
+          -DCP2K_USE_FFTW3=ON \
+          -DCP2K_USE_COSMA=ON \
+          -DCP2K_USE_ELPA=ON \
+          -DCP2K_USE_SCALAPACK=ON \
+          -DCP2K_USE_DLAF=OFF \
+          -DCP2K_USE_PEXSI=OFF && \
     cmake --build build -j $(nproc) && \
     cmake --install build --prefix /opt/cp2k && \
     rm -rf /var/tmp/cp2k-2026.1 /var/tmp/v2026.1.tar.gz /opt/cp2k_toolchain/build
