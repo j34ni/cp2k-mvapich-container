@@ -1,11 +1,7 @@
 # cp2k-mvapich-container
 
- --------------------------------------------------------------------
- -                                                                  -
- -               Summary of enabled dependencies                    -
- -                                                                  -
- --------------------------------------------------------------------
- 
+Summary of **enabled** dependencies:
+```
    - BLAS
    - LAPACK
    - MPI
@@ -16,13 +12,9 @@
    - COSMA
    - Libint2
    - ELPA
- 
- --------------------------------------------------------------------
- -                                                                  -
- -        List of dependencies not included in this build           -
- -                                                                  -
- --------------------------------------------------------------------
- 
+```
+List of dependencies **not included** in this build:
+```
     - DFTD4
     - DeePMD
     - PEXSI
@@ -41,4 +33,4 @@
     - LibTorch
     - TREXIO
     - GreenX
-
+```
