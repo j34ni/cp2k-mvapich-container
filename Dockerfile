@@ -27,7 +27,6 @@ RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/cp2k/cp2k/
     mkdir -p /opt/cp2k_toolchain && \
     cp -r /var/tmp/cp2k-2026.1/tools/toolchain/* /opt/cp2k_toolchain/ && \
     cd /opt/cp2k_toolchain && \
-    # On s'assure d'utiliser bash pour la toolchain
     bash ./install_cp2k_toolchain.sh \
          --mpi-mode=mpich \
          --with-cosma=install \
@@ -40,23 +39,25 @@ RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/cp2k/cp2k/
          --with-openblas=install \
          --with-scalapack=install \
          -j $(nproc) && \
-    # CRITIQUE : Utiliser 'bash -c' pour sourcer correctement l'environnement avant CMake
     /bin/bash -c "source install/setup && \
     cd /var/tmp/cp2k-2026.1 && \
     cmake -S . -B build \
-          -DCMAKE_PREFIX_PATH='/opt/cp2k_toolchain/install;/opt/conda' \
-          -DCP2K_USE_EVERYTHING=OFF \
-          -DCP2K_USE_LIBINT=ON \
-          -DCP2K_USE_LIBXC=ON \
-          -DCP2K_USE_FFTW3=ON \
+          -DCMAKE_PREFIX_PATH="/opt/cp2k_toolchain/install;/opt/conda" \
           -DCP2K_USE_COSMA=ON \
           -DCP2K_USE_ELPA=ON \
+          -DCP2K_USE_EVERYTHING=OFF \
+          -DCP2K_USE_FFTW3=ON \
+          -DCP2K_USE_LIBINT=ON \
+          -DCP2K_USE_LIBXC=ON \
+          -DCP2K_USE_MPI=ON \
+          -DCP2K_USE_OPENMP=ON \
           -DCP2K_USE_SCALAPACK=ON \
-          -DCP2K_USE_DLAF=OFF \
-          -DCP2K_USE_PEXSI=OFF && \
+          -DCMAKE_INSTALL_PREFIX=/opt/cp2k && \
     cmake --build build -j $(nproc) && \
-    cmake --install build --prefix /opt/cp2k" && \
+    cmake --install build && \
     rm -rf /var/tmp/cp2k-2026.1 /var/tmp/v2026.1.tar.gz
+
+ENV LD_LIBRARY_PATH="/opt/cp2k/lib:/opt/cp2k_toolchain/install/openblas-0.3.30/lib:${LD_LIBRARY_PATH}"
 
 COPY start.sh /opt/start.sh
 RUN chmod +x /opt/start.sh
